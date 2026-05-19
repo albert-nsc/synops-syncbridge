@@ -1,0 +1,6 @@
+{
+  "scope": "x_nscgg_syncbridge",
+  "scopeId": "e0be7efd6032491997e4a06232f3cf3b",
+  "name": "SyncBridge SynOps",
+  "tsconfigPath": "./src/server/tsconfig.json"
+}
