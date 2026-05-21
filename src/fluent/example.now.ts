@@ -1,5 +1,5 @@
 import { RestApi } from "@servicenow/sdk/core";
-import { hello, echo, getIncident } from "../server/apiHandlers";
+import { createServiceRequest, updateServiceRequest, cancelServiceRequest } from "../server/apiHandlers";
 
 RestApi({
     $id: Now.ID["synops_rest_api"],
@@ -20,28 +20,28 @@ RestApi({
 
     routes: [
         {
-            $id: Now.ID["synops_hello"],
-            name: "Hello",
-            path: "/hello",
-            method: "GET",
-            version: 1,
-            script: hello,
-        },
-        {
-            $id: Now.ID["synops_echo"],
-            name: "Echo",
-            path: "/echo",
+            $id: Now.ID["synops_create_service_request"],
+            name: "Create service request",
+            path: "/createServiceRequest",
             method: "POST",
             version: 1,
-            script: echo,
+            script: createServiceRequest,
         },
         {
-            $id: Now.ID["synops_incident_by_number"],
-            name: "Get incident by number",
-            path: "/incident/{number}",
-            method: "GET",
+            $id: Now.ID["synops_update_service_request"],
+            name: "Update service request",
+            path: "/updateServiceRequest",
+            method: "POST",
             version: 1,
-            script: getIncident,
+            script: updateServiceRequest,
+        },
+        {
+            $id: Now.ID["synops_cancel_service_request"],
+            name: "Cancel service request",
+            path: "/cancelServiceRequest",
+            method: "POST",
+            version: 1,
+            script: cancelServiceRequest,
         },
     ],
 });

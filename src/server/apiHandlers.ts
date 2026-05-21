@@ -1,5 +1,18 @@
 import { GlideRecord } from "@servicenow/glide";
 
+export function createServiceRequest(request: any, response: any) {
+    const body = request.body?.data ?? {};
+}
+
+export function updateServiceRequest(request: any, response: any) {
+    const body = request.body?.data ?? {};
+}
+
+export function cancelServiceRequest(request: any, response: any) {
+    const body = request.body?.data ?? {};
+}
+
+/*
 export function hello(request: any, response: any) {
     response.setStatus(200);
 
@@ -50,3 +63,4 @@ export function getIncident(request: any, response: any) {
         priority: gr.getDisplayValue("priority"),
     };
 }
+*/
