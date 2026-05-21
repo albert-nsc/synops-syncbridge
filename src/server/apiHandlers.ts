@@ -2,14 +2,38 @@ import { GlideRecord } from "@servicenow/glide";
 
 export function createServiceRequest(request: any, response: any) {
     const body = request.body?.data ?? {};
+
+    response.setContentType('application/json');
+    response.setStatus(200);
+    var writer = response.getStreamWriter();
+    var response_body = {
+        "Hello": "SynOps"
+    };
+    writer.writeString(JSON.stringify(response_body));
 }
 
 export function updateServiceRequest(request: any, response: any) {
     const body = request.body?.data ?? {};
+
+    response.setContentType('application/json');
+    response.setStatus(200);
+    var writer = response.getStreamWriter();
+    var response_body = {
+        "Hello": "SynOps"
+    };
+    writer.writeString(JSON.stringify(response_body));
 }
 
 export function cancelServiceRequest(request: any, response: any) {
     const body = request.body?.data ?? {};
+
+    response.setContentType('application/json');
+    response.setStatus(200);
+    var writer = response.getStreamWriter();
+    var response_body = {
+        "Hello": "SynOps"
+    };
+    writer.writeString(JSON.stringify(response_body));
 }
 
 /*
