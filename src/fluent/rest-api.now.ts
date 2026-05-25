@@ -1,4 +1,5 @@
 import { RestApi } from "@servicenow/sdk/core";
+import { synopsRestAcl } from "./security.now";
 import { createServiceRequest, updateServiceRequest, cancelServiceRequest } from "../server/apiHandlers";
 
 RestApi({
@@ -8,6 +9,9 @@ RestApi({
     shortDescription: "Custom SynOps integration API",
     consumes: "application/json",
     produces: "application/json",
+
+    // Enforce this ACL for the whole API
+    enforceAcl: [synopsRestAcl],
 
     versions: [
         {
@@ -26,6 +30,12 @@ RestApi({
             method: "POST",
             version: 1,
             script: createServiceRequest,
+
+            // Require authenticated user
+            authorization: true,
+
+            // Enforce ACLs
+            authentication: true,
         },
         {
             $id: Now.ID["synops_update_service_request"],
@@ -34,6 +44,8 @@ RestApi({
             method: "POST",
             version: 1,
             script: updateServiceRequest,
+            authorization: true,
+            authentication: true,
         },
         {
             $id: Now.ID["synops_cancel_service_request"],
@@ -42,6 +54,8 @@ RestApi({
             method: "POST",
             version: 1,
             script: cancelServiceRequest,
+            authorization: true,
+            authentication: true,
         },
     ],
 });
