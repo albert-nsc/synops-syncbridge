@@ -1,10 +1,40 @@
 import { GlideRecord, gs } from "@servicenow/glide";
 
+type JsonPrimitive = string | number | boolean | null;
+type JsonValue = JsonPrimitive | JsonObject | JsonValue[];
+type JsonObject = { [key: string]: JsonValue };
+
+type FlattenedJson = Record<string, JsonPrimitive | JsonValue[]>;
+
+function flattenJson(
+    input: JsonObject,
+    parentKey = "",
+    result: FlattenedJson = {}
+): FlattenedJson {
+    for (const [key, value] of Object.entries(input)) {
+        const newKey = parentKey ? `${parentKey}.${key}` : key;
+
+        if (
+            value !== null &&
+            typeof value === "object" &&
+            !Array.isArray(value)
+        ) {
+            flattenJson(value as JsonObject, newKey, result);
+        } else {
+            result[newKey] = value;
+        }
+    }
+
+    return result;
+}
+
 export function createServiceRequest(request: any, response: any) {
     const requestId = gs.generateGUID();
     const body = request.body?.data ?? {};
+    const flat = flattenJson(body);
 
     gs.info(`[SynOpsAPI][${requestId}] Received createServiceRequest with body: ${JSON.stringify(body)}`);
+    gs.info(`[SynOpsAPI][${requestId}] Flattened body: ${JSON.stringify(flat)}`);
 
     response.setContentType('application/json');
     response.setStatus(200);
@@ -19,8 +49,10 @@ export function createServiceRequest(request: any, response: any) {
 export function updateServiceRequest(request: any, response: any) {
     const requestId = gs.generateGUID();
     const body = request.body?.data ?? {};
+    const flat = flattenJson(body);
 
     gs.info(`[SynOpsAPI][${requestId}] Received updateServiceRequest with body: ${JSON.stringify(body)}`);
+    gs.info(`[SynOpsAPI][${requestId}] Flattened body: ${JSON.stringify(flat)}`);
 
     response.setContentType('application/json');
     response.setStatus(200);
@@ -35,8 +67,10 @@ export function updateServiceRequest(request: any, response: any) {
 export function cancelServiceRequest(request: any, response: any) {
     const requestId = gs.generateGUID();
     const body = request.body?.data ?? {};
+    const flat = flattenJson(body);
 
     gs.info(`[SynOpsAPI][${requestId}] Received cancelServiceRequest with body: ${JSON.stringify(body)}`);
+    gs.info(`[SynOpsAPI][${requestId}] Flattened body: ${JSON.stringify(flat)}`);
 
     response.setContentType('application/json');
     response.setStatus(200);
