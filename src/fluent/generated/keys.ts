@@ -59,6 +59,10 @@ declare global {
                         id: '5e46781bb88f4d6e87dc62148652854a'
                         deleted: true
                     }
+                    synops_rest_acl: {
+                        table: 'sys_security_acl'
+                        id: '2618e0e7630a491992d28e9cf365344f'
+                    }
                     synops_rest_api: {
                         table: 'sys_ws_definition'
                         id: '75a99162d2d84f9e8cdeb3c6f20e9b75'
@@ -68,6 +72,28 @@ declare global {
                         id: '97261fd7cd7f4d1b9c15db98d91ee9bd'
                     }
                 }
+                composite: [
+                    {
+                        table: 'sys_user_role'
+                        id: '024aedd13d0e4bef9047b1ec2526012f'
+                        key: {
+                            name: 'x_nscgg_syncbridge.synops_api_user'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: 'bad937dcbfde44a39901527046239a80'
+                        key: {
+                            sys_security_acl: '2618e0e7630a491992d28e9cf365344f'
+                            sys_user_role: {
+                                id: '024aedd13d0e4bef9047b1ec2526012f'
+                                key: {
+                                    name: 'x_nscgg_syncbridge.synops_api_user'
+                                }
+                            }
+                        }
+                    },
+                ]
             }
         }
     }
