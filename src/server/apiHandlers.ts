@@ -1,10 +1,15 @@
 import { GlideRecord, gs } from "@servicenow/glide";
 
 type JsonPrimitive = string | number | boolean | null;
-type JsonValue = JsonPrimitive | JsonObject | JsonValue[];
+type JsonArray = JsonValue[];
 type JsonObject = { [key: string]: JsonValue };
+type JsonValue = JsonPrimitive | JsonArray | JsonObject;
 
-type FlattenedJson = Record<string, JsonPrimitive | JsonValue[]>;
+type FlattenedJson = Record<string, JsonPrimitive | JsonArray>;
+
+function isPlainJsonObject(value: JsonValue): value is JsonObject {
+    return value !== null && typeof value === "object" && !Array.isArray(value);
+}
 
 function flattenJson(
     input: JsonObject,
@@ -14,12 +19,8 @@ function flattenJson(
     for (const [key, value] of Object.entries(input)) {
         const newKey = parentKey ? `${parentKey}.${key}` : key;
 
-        if (
-            value !== null &&
-            typeof value === "object" &&
-            !Array.isArray(value)
-        ) {
-            flattenJson(value as JsonObject, newKey, result);
+        if (isPlainJsonObject(value)) {
+            flattenJson(value, newKey, result);
         } else {
             result[newKey] = value;
         }
