@@ -29,6 +29,13 @@ function flattenJson(
     return result;
 }
 
+function setResponse(response: any, status_code: number, body: any) {
+    response.setContentType('application/json');
+    response.setStatus(status_code);
+    const writer = response.getStreamWriter();
+    writer.writeString(JSON.stringify(body));
+}
+
 export function createServiceRequest(request: any, response: any) {
     const requestId = gs.generateGUID();
     const body = request.body?.data ?? {};
@@ -37,14 +44,21 @@ export function createServiceRequest(request: any, response: any) {
     gs.info(`[SynOpsAPI][${requestId}] Received createServiceRequest with body: ${JSON.stringify(body)}`);
     gs.info(`[SynOpsAPI][${requestId}] Flattened body: ${JSON.stringify(flat)}`);
 
-    response.setContentType('application/json');
-    response.setStatus(200);
-    const writer = response.getStreamWriter();
+    const customerName = flat["createServiceRequest.site.contact.name"];
+    if (!customerName) {
+        gs.warn(`[SynOpsAPI][${requestId}] Missing customer name in request body`);
+        setResponse(response, 400, {
+            "requestId": requestId,
+            "error": "Missing customer name in request body"
+        });
+        return;
+    }
+
     const response_body = {
         "requestId": requestId,
         "Hello": "SynOps"
     };
-    writer.writeString(JSON.stringify(response_body));
+    setResponse(response, 200, response_body);
 }
 
 export function updateServiceRequest(request: any, response: any) {
