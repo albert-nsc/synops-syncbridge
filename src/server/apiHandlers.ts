@@ -55,11 +55,12 @@ export function createServiceRequest(request: any, response: any) {
     }
 
     try {
-        const response_body = {
+        setResponse(response, 200, {
+            "timeStamp": new Date().toISOString(),
+            "status": "Accepted",
+            "fault": null,
             "requestId": requestId,
-            "Hello": "SynOps"
-        };
-        setResponse(response, 200, response_body);
+        });
         return;
     } catch (e: any) {
         gs.error(`[SynOpsAPI][${requestId}] Failed: ${e.message || String(e)}`);
