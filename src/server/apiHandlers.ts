@@ -54,11 +54,27 @@ export function createServiceRequest(request: any, response: any) {
         return;
     }
 
-    const response_body = {
-        "requestId": requestId,
-        "Hello": "SynOps"
-    };
-    setResponse(response, 200, response_body);
+    try {
+        const response_body = {
+            "requestId": requestId,
+            "Hello": "SynOps"
+        };
+        setResponse(response, 200, response_body);
+        return;
+    } catch (e: any) {
+        gs.error(`[SynOpsAPI][${requestId}] Failed: ${e.message || String(e)}`);
+        const timestamp = new Date().toISOString();
+        setResponse(response, 500, {
+            "timeStamp": timestamp,
+            "status": "Failed",
+            "fault": {
+                "faultCode": "InternalServerError",
+                "faultDescription": e.message || String(e)
+            },
+            "requestId": requestId,
+        });
+        return;
+    }
 }
 
 export function updateServiceRequest(request: any, response: any) {
