@@ -48,8 +48,13 @@ export function createServiceRequest(request: any, response: any) {
     if (!customerName) {
         gs.warn(`[SynOpsAPI][${requestId}] Missing customer name in request body`);
         setResponse(response, 400, {
+            "timeStamp": new Date().toISOString(),
+            "status": "Failed",
+            "fault": {
+                "faultCode": "BadRequest",
+                "faultDescription": "Missing customer name in request body"
+            },
             "requestId": requestId,
-            "error": "Missing customer name in request body"
         });
         return;
     }
