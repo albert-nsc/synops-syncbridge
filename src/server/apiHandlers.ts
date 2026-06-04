@@ -29,6 +29,16 @@ function flattenJson(
     return result;
 }
 
+function getString(obj: Record<string, unknown>, key: string): string {
+  const value = obj[key];
+
+  if (typeof value !== "string") {
+    return "";
+  }
+
+  return value;
+}
+
 function setResponse(response: any, status_code: number, body: any) {
     response.setContentType('application/json');
     response.setStatus(status_code);
@@ -44,7 +54,7 @@ export function createServiceRequest(request: any, response: any) {
     gs.info(`[SynOpsAPI][${requestId}] Received createServiceRequest with body: ${JSON.stringify(body)}`);
     gs.info(`[SynOpsAPI][${requestId}] Flattened body: ${JSON.stringify(flat)}`);
 
-    const customerName = flat["createServiceRequest.site.contact.name"];
+    const customerName = getString(flat, "createServiceRequest.site.contact.name");
     if (!customerName) {
         gs.warn(`[SynOpsAPI][${requestId}] Missing customer name in request body`);
         setResponse(response, 400, {
@@ -58,6 +68,9 @@ export function createServiceRequest(request: any, response: any) {
         });
         return;
     }
+
+    const customerPhone = getString(flat, "createServiceRequest.site.contact.phoneNumber");
+    const customerEmail = getString(flat, "createServiceRequest.site.contact.emailAddress");
 
     try {
         setResponse(response, 200, {
