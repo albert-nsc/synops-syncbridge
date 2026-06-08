@@ -193,6 +193,8 @@ export function createServiceRequest(request: any, response: any) {
             throw new Error("Failed to insert wm_order");
         }
 
+        const workOrderNumber = wo.getValue("number");
+
         gs.info(`[SynOpsAPI][${requestId}] Created wm_order ${workOrderSysId}`);
 
         setResponse(response, 200, {
@@ -200,6 +202,7 @@ export function createServiceRequest(request: any, response: any) {
             "status": "Accepted",
             "fault": null,
             "work_order": {
+                "number": workOrderNumber,
                 "sys_id": workOrderSysId,
             },
             "requestId": requestId,
