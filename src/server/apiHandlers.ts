@@ -184,7 +184,8 @@ export function createServiceRequest(request: any, response: any) {
         );
 
         wo.setValue("priority", "3");
-        wo.setValue("u_external_reference", externalReference);
+        wo.setValue("correlation_id", externalReference);
+        wo.setValue("correlation_display", "SynOps");
         wo.setValue("u_site_address", siteAddress);
 
         const workOrderSysId = wo.insert();
