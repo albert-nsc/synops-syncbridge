@@ -30,13 +30,13 @@ function flattenJson(
 }
 
 function getString(obj: Record<string, unknown>, key: string): string {
-  const value = obj[key];
+    const value = obj[key];
 
-  if (typeof value !== "string") {
-    return "";
-  }
+    if (typeof value !== "string") {
+        return "";
+    }
 
-  return value;
+    return value;
 }
 
 function setResponse(response: any, status_code: number, body: any) {
@@ -199,6 +199,9 @@ export function createServiceRequest(request: any, response: any) {
             "timeStamp": new Date().toISOString(),
             "status": "Accepted",
             "fault": null,
+            "work_order": {
+                "sys_id": workOrderSysId,
+            },
             "requestId": requestId,
         });
         return;
