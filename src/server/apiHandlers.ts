@@ -188,6 +188,26 @@ export function createServiceRequest(request: any, response: any) {
         wo.setValue("correlation_display", "SynOps");
         wo.setValue("u_site_address", siteAddress);
 
+        const loc = new GlideRecord("cmn_location");
+        loc.initialize();
+
+        loc.setValue("name", `${addressLine1}, ${addressCity}`);
+        loc.setValue("street", addressLine1);
+        loc.setValue("city", addressCity);
+        loc.setValue("state", addressState);
+        loc.setValue("country", addressCountry);
+        loc.setValue("zip", addressPostalCode);
+
+        const locationSysId = loc.insert();
+
+        if (!locationSysId) {
+            throw new Error("Failed to create cmn_location record");
+        }
+
+        gs.info(`[SynOpsAPI][${requestId}] Created cmn_location ${locationSysId}`);
+
+        wo.setValue("location", locationSysId);
+
         const workOrderSysId = wo.insert();
 
         if (!workOrderSysId) {
