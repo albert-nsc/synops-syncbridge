@@ -254,6 +254,22 @@ export function updateServiceRequest(request: any, response: any) {
     gs.info(`[SynOpsAPI][${requestId}] Flattened body: ${JSON.stringify(flat)}`);
 
     try {
+        const woNumber = getString(flat, "updateServiceRequest.vendorTicketId");
+
+        const wo = new GlideRecord("wm_order");
+
+        wo.addQuery("number", woNumber);
+        wo.setLimit(1);
+        wo.query();
+
+        if (!wo.next()) {
+            throw new Error(`Work order not found: ${woNumber}`);
+        }
+
+        const workNote = body["updateServiceRequest"]["remarks"][0]["text"];
+        wo.setValue("work_notes", workNote);
+        wo.update();
+
         setResponse(response, 200, {
             "timeStamp": new Date().toISOString(),
             "status": "Accepted",
