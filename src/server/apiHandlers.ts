@@ -253,14 +253,28 @@ export function updateServiceRequest(request: any, response: any) {
     gs.info(`[SynOpsAPI][${requestId}] Received updateServiceRequest with body: ${JSON.stringify(body)}`);
     gs.info(`[SynOpsAPI][${requestId}] Flattened body: ${JSON.stringify(flat)}`);
 
-    response.setContentType('application/json');
-    response.setStatus(200);
-    const writer = response.getStreamWriter();
-    const response_body = {
-        "requestId": requestId,
-        "Hello": "SynOps"
-    };
-    writer.writeString(JSON.stringify(response_body));
+    try {
+        setResponse(response, 200, {
+            "timeStamp": new Date().toISOString(),
+            "status": "Accepted",
+            "fault": null,
+            "requestId": requestId,
+        });
+        return;
+    } catch (e: any) {
+        gs.error(`[SynOpsAPI][${requestId}] Failed: ${e.message || String(e)}`);
+        const timestamp = new Date().toISOString();
+        setResponse(response, 500, {
+            "timeStamp": timestamp,
+            "status": "Failed",
+            "fault": {
+                "faultCode": "InternalServerError",
+                "faultDescription": e.message || String(e)
+            },
+            "requestId": requestId,
+        });
+        return;
+    }
 }
 
 export function cancelServiceRequest(request: any, response: any) {
