@@ -46,16 +46,24 @@ function setResponse(response: any, status_code: number, body: any) {
     writer.writeString(JSON.stringify(body));
 }
 
+function setRequiredValue(gr: GlideRecord, field: string, value: string) {
+    if (!gr.isValidField(field)) {
+        throw new Error(`Invalid async job field: ${field}`);
+    }
+
+    gr.setValue(field, value);
+}
+
 function createAsyncJob(requestId: string, target: string, payload: unknown): string {
     const gr = new GlideRecord("x_nscgg_syncbridge_async_job");
 
     gr.initialize();
 
-    gr.setValue("u_request_id", requestId);
-    gr.setValue("u_target", target);
-    gr.setValue("u_state", "queued");
-    gr.setValue("u_payload", JSON.stringify(payload));
-    gr.setValue("u_attempts", "0");
+    setRequiredValue(gr, "request_id", requestId);
+    setRequiredValue(gr, "target", target);
+    setRequiredValue(gr, "state", "queued");
+    setRequiredValue(gr, "payload", JSON.stringify(payload));
+    setRequiredValue(gr, "attempts", "0");
 
     const sysId = gr.insert();
 
