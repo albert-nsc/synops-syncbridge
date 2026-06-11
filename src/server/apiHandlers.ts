@@ -344,7 +344,7 @@ export function createServiceRequest(request: any, response: any) {
         }
 
         gs.eventQueue(
-            "x_synops.long_request.process",
+            "x_nscgg_syncbridge.long_request.process",
             job1,
             job1SysId,
             "request_1"
@@ -356,7 +356,7 @@ export function createServiceRequest(request: any, response: any) {
         }
 
         gs.eventQueue(
-            "x_synops.long_request.process",
+            "x_nscgg_syncbridge.long_request.process",
             job2,
             job2SysId,
             "request_2"

@@ -7,7 +7,7 @@ ScriptAction({
     name: "ProcessLongRequestAction",
     active: true,
     description: "Processes queued long-running outbound requests",
-    eventName: "x_synops.long_request.process",
+    eventName: "x_nscgg_syncbridge.long_request.process",
     order: 100,
     script: processLongRequest,
 });
