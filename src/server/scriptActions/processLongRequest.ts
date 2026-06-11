@@ -54,7 +54,7 @@ export function processLongRequest() {
 }
 
 function callFirstLongRunningEndpoint(payload: any) {
-    const rm = new NamedRESTMessageV2("My REST Message", "first_request");
+    const rm = new NamedRESTMessageV2("My REST Message", "NSC-SynOps Update API");
     rm.setRequestBody(JSON.stringify(payload));
 
     const res = rm.execute();
@@ -66,7 +66,7 @@ function callFirstLongRunningEndpoint(payload: any) {
 }
 
 function callSecondLongRunningEndpoint(payload: any) {
-    const rm = new NamedRESTMessageV2("My REST Message", "second_request");
+    const rm = new NamedRESTMessageV2("My REST Message", "NSC-SynOps Update API");
     rm.setRequestBody(JSON.stringify(payload));
 
     const res = rm.execute();

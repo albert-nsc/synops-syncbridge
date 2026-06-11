@@ -238,8 +238,105 @@ export function createServiceRequest(request: any, response: any) {
 
         gs.info(`[SynOpsAPI][${requestId}] Created wm_order ${workOrderSysId}`);
 
-        const job1SysId = createAsyncJob(requestId, "request_1", body);
-        const job2SysId = createAsyncJob(requestId, "request_2", body);
+        const createPayload = {
+            "Header": {
+                "transactionId": "1470169.1779353049121",
+                "userId": "SYSTEM_USER",
+                "sourceSystem": "NSC", //Mandatory
+                "timeStamp": "2026-05-21T08:44:09Z"
+            },
+            "IncidentUpdate": {
+                "customerTicketId": "1470169",
+                "vendorTicketID": "1530345",
+                "vendorTicketStatus": "ASSIGNED",
+                "activity": "ASSIGN",
+                "responseDate": "2026-05-21T08:44:09Z",
+                "feConfirmEtaDate": "2026-05-22T13:00:00Z",
+                "feDispatchDate": "2026-05-22T13:00:00Z",
+                "feArrivalDate": "2026-05-22T13:00:00Z",
+                "SuspendCode": null,
+                "SuspendDesc": null,
+                "feCompletionDate": null,
+                "CauseCode": null,
+                "RepairCode": null,
+                "Comments": "\nAppointment set for 2026-05-22T13:00:00Z,\nAssigned to Giuseppe Pagana,\nEngineer phone number: +491718888712,\nEngineer email address Giuseppe.Pagana@.com",
+                "incidentStatus": "ASSIGN",
+                "incidentClosedDTGMT": null,
+                "incidentStartDTGMT": null,
+                "incidentPriority": null,
+                "incidentResolutionCode": null,
+                "incidentResolutionDesc": null,
+                "OperationalCategorizationTier1": null,
+                "IncidentCauseCode": null,
+                "IncidentCauseType": null,
+                "firstFeName": "Giuseppe Pagana",
+                "firstFePhone": "+491718888712",
+                "firstFeEmail": "email@hemmersbach.com",
+                //Second FE details required if second fe required is true
+                "secondFeName": "Giuseppe Pagana",
+                "secondFePhone": "+491718888712",
+                "secondFeEmail": "email@hemmersbach.com",
+                "TrackingNumber": null,
+                "IsPartReturned": null,
+                "PartNotReturnedReason": null,
+                "Fault": {
+                    "FaultCode": "",
+                    "FaultDescription": ""
+                }
+            }
+        }
+
+        const job1SysId = createAsyncJob(requestId, "request_1", createPayload);
+
+        const openPayload = {
+            "Header": {
+                "transactionId": "1470169.1779353049121",
+                "userId": "SYSTEM_USER",
+                "sourceSystem": "NSC", //Mandatory
+                "timeStamp": "2026-05-21T08:44:09Z"
+            },
+            "IncidentUpdate": {
+                "customerTicketId": "1470169",
+                "vendorTicketID": "1530345",
+                "vendorTicketStatus": "ASSIGNED",
+                "activity": "ASSIGN",
+                "responseDate": "2026-05-21T08:44:09Z",
+                "feConfirmEtaDate": "2026-05-22T13:00:00Z",
+                "feDispatchDate": "2026-05-22T13:00:00Z",
+                "feArrivalDate": "2026-05-22T13:00:00Z",
+                "SuspendCode": null,
+                "SuspendDesc": null,
+                "feCompletionDate": null,
+                "CauseCode": null,
+                "RepairCode": null,
+                "Comments": "\nAppointment set for 2026-05-22T13:00:00Z,\nAssigned to Giuseppe Pagana,\nEngineer phone number: +491718888712,\nEngineer email address Giuseppe.Pagana@.com",
+                "incidentStatus": "ASSIGN",
+                "incidentClosedDTGMT": null,
+                "incidentStartDTGMT": null,
+                "incidentPriority": null,
+                "incidentResolutionCode": null,
+                "incidentResolutionDesc": null,
+                "OperationalCategorizationTier1": null,
+                "IncidentCauseCode": null,
+                "IncidentCauseType": null,
+                "firstFeName": "Giuseppe Pagana",
+                "firstFePhone": "+491718888712",
+                "firstFeEmail": "email@hemmersbach.com",
+                //Second FE details required if second fe required is true
+                "secondFeName": "Giuseppe Pagana",
+                "secondFePhone": "+491718888712",
+                "secondFeEmail": "email@hemmersbach.com",
+                "TrackingNumber": null,
+                "IsPartReturned": null,
+                "PartNotReturnedReason": null,
+                "Fault": {
+                    "FaultCode": "",
+                    "FaultDescription": ""
+                }
+            }
+        }
+
+        const job2SysId = createAsyncJob(requestId, "request_2", openPayload);
 
         const job1 = new GlideRecord("x_synops_async_job");
         if (!job1.get(job1SysId)) {
@@ -273,6 +370,10 @@ export function createServiceRequest(request: any, response: any) {
                 "number": workOrderNumber,
                 "sys_id": workOrderSysId,
             },
+            "jobs": [
+                job1.getUniqueValue(),
+                job2.getUniqueValue(),
+            ],
             "requestId": requestId,
         });
         return;
