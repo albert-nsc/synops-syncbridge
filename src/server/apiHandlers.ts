@@ -238,6 +238,33 @@ export function createServiceRequest(request: any, response: any) {
 
         gs.info(`[SynOpsAPI][${requestId}] Created wm_order ${workOrderSysId}`);
 
+        const job1SysId = createAsyncJob(requestId, "request_1", body);
+        const job2SysId = createAsyncJob(requestId, "request_2", body);
+
+        const job1 = new GlideRecord("x_synops_async_job");
+        if (!job1.get(job1SysId)) {
+            throw new Error(`Async job not found: ${job1SysId}`);
+        }
+
+        gs.eventQueue(
+            "x_synops.long_request.process",
+            job1,
+            job1SysId,
+            "request_1"
+        );
+
+        const job2 = new GlideRecord("x_synops_async_job");
+        if (!job2.get(job2SysId)) {
+            throw new Error(`Async job not found: ${job2SysId}`);
+        }
+
+        gs.eventQueue(
+            "x_synops.long_request.process",
+            job2,
+            job2SysId,
+            "request_2"
+        );
+
         setResponse(response, 200, {
             "timeStamp": new Date().toISOString(),
             "status": "Accepted",
