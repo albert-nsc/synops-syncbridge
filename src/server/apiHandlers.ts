@@ -46,6 +46,26 @@ function setResponse(response: any, status_code: number, body: any) {
     writer.writeString(JSON.stringify(body));
 }
 
+function createAsyncJob(requestId: string, target: string, payload: unknown): string {
+    const gr = new GlideRecord("x_synops_async_job");
+
+    gr.initialize();
+
+    gr.setValue("u_request_id", requestId);
+    gr.setValue("u_target", target);
+    gr.setValue("u_state", "queued");
+    gr.setValue("u_payload", JSON.stringify(payload));
+    gr.setValue("u_attempts", "0");
+
+    const sysId = gr.insert();
+
+    if (!sysId) {
+        throw new Error("Failed to create async job record");
+    }
+
+    return sysId;
+}
+
 export function createServiceRequest(request: any, response: any) {
     const requestId = gs.generateGUID();
     const body = request.body?.data ?? {};
