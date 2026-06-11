@@ -20,13 +20,13 @@ export function processLongRequest() {
     const job = current as GlideRecord;
 
     const jobSysId = job.getUniqueValue();
-    const target = job.getValue("u_target") || "";
+    const target = job.getValue("target") || "";
 
     try {
-        job.setValue("u_state", "processing");
+        job.setValue("state", "processing");
         job.update();
 
-        const payloadRaw = job.getValue("u_payload") || "{}";
+        const payloadRaw = job.getValue("payload") || "{}";
         const payload = JSON.parse(payloadRaw);
 
         if (target === "request_1") {
@@ -37,15 +37,15 @@ export function processLongRequest() {
             throw new Error(`Unknown async target: ${target}`);
         }
 
-        job.setValue("u_state", "completed");
-        job.setValue("u_error", "");
+        job.setValue("state", "completed");
+        job.setValue("error", "");
         job.update();
     } catch (e: any) {
-        const attempts = parseInt(job.getValue("u_attempts") || "0", 10);
+        const attempts = parseInt(job.getValue("attempts") || "0", 10);
 
-        job.setValue("u_state", "failed");
-        job.setValue("u_error", e.message || String(e));
-        job.setValue("u_attempts", String(attempts + 1));
+        job.setValue("state", "failed");
+        job.setValue("error", e.message || String(e));
+        job.setValue("attempts", String(attempts + 1));
         job.update();
 
         gs.error(`[AsyncJob][${jobSysId}] ${e.message || e}`);
