@@ -53,7 +53,7 @@ export function processLongRequest() {
 }
 
 function callFirstLongRunningEndpoint(payload: unknown) {
-    const rm = createRestMessage("SynOps External API", "NSC-SynOps Update API");
+    const rm = createRestMessage("NSC-SynOps Update API", "POST");
 
     rm.setRequestHeader("Content-Type", "application/json");
     rm.setRequestBody(JSON.stringify(payload));
@@ -67,7 +67,7 @@ function callFirstLongRunningEndpoint(payload: unknown) {
 }
 
 function callSecondLongRunningEndpoint(payload: unknown) {
-    const rm = createRestMessage("SynOps External API", "NSC-SynOps Update API");
+    const rm = createRestMessage("NSC-SynOps Update API", "POST");
 
     rm.setRequestHeader("Content-Type", "application/json");
     rm.setRequestBody(JSON.stringify(payload));
