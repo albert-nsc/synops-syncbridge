@@ -47,7 +47,7 @@ function setResponse(response: any, status_code: number, body: any) {
 }
 
 function createAsyncJob(requestId: string, target: string, payload: unknown): string {
-    const gr = new GlideRecord("x_synops_async_job");
+    const gr = new GlideRecord("x_nscgg_syncbridge_async_job");
 
     gr.initialize();
 
@@ -338,7 +338,7 @@ export function createServiceRequest(request: any, response: any) {
 
         const job2SysId = createAsyncJob(requestId, "request_2", openPayload);
 
-        const job1 = new GlideRecord("x_synops_async_job");
+        const job1 = new GlideRecord("x_nscgg_syncbridge_async_job");
         if (!job1.get(job1SysId)) {
             throw new Error(`Async job not found: ${job1SysId}`);
         }
@@ -350,7 +350,7 @@ export function createServiceRequest(request: any, response: any) {
             "request_1"
         );
 
-        const job2 = new GlideRecord("x_synops_async_job");
+        const job2 = new GlideRecord("x_nscgg_syncbridge_async_job");
         if (!job2.get(job2SysId)) {
             throw new Error(`Async job not found: ${job2SysId}`);
         }

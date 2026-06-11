@@ -5,7 +5,7 @@ Record({
     table: "sysevent_register",
     data: {
         name: "x_synops.long_request.process",
-        table: "x_synops_async_job",
+        table: "x_nscgg_syncbridge_async_job",
         queue: "synops_outbound",
         description: "Processes long-running outbound requests queued by Scripted REST API",
     },
