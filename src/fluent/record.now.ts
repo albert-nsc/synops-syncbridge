@@ -6,7 +6,7 @@ Record({
     data: {
         name: "x_nscgg_syncbridge.long_request.process",
         table: "x_nscgg_syncbridge_async_job",
-        queue: "synops_outbound",
+        //queue: "synops_outbound",
         description: "Processes long-running outbound requests queued by Scripted REST API",
     },
 });
