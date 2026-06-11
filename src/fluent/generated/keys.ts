@@ -19,9 +19,17 @@ declare global {
                         id: 'abf364adbc35411f9e8ebf9527a6f712'
                         deleted: true
                     }
+                    'long-request-process-event': {
+                        table: 'sysevent_register'
+                        id: 'e1128d2f155f45f79cc3e3918b26c2f0'
+                    }
                     package_json: {
                         table: 'sys_module'
                         id: 'ff51e4a4910a45229faf2b06295148e2'
+                    }
+                    'process-long-request-action': {
+                        table: 'sysevent_script_action'
+                        id: 'e56fbe810796414788d8be98cc8b8ddd'
                     }
                     src_server_apiHandlers_ts: {
                         table: 'sys_module'
@@ -31,6 +39,10 @@ declare global {
                         table: 'sys_module'
                         id: '46294053c489473291b34e8008e22c2d'
                         deleted: true
+                    }
+                    src_server_scriptActions_processLongRequest_ts: {
+                        table: 'sys_module'
+                        id: '9bd4bb28019543b68ccbafba240f832f'
                     }
                     synops_api_v1: {
                         table: 'sys_ws_version'
