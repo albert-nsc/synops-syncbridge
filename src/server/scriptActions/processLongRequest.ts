@@ -1,35 +1,33 @@
-// src/server/scriptActions/processLongRequest.ts
-import { GlideRecord, GlideDateTime, gs } from "@servicenow/glide";
+import { GlideRecord, gs } from "@servicenow/glide";
 import { RESTMessageV2 } from "@servicenow/glide/sn_ws";
 
-declare const event: any;
 declare const current: any;
 
-type RESTMessageV2NamedConstructor = new (
+type NamedRESTMessageV2Ctor = new (
     name: string,
     methodName: string
 ) => RESTMessageV2;
 
 const NamedRESTMessageV2 =
-    RESTMessageV2 as unknown as RESTMessageV2NamedConstructor;
+    RESTMessageV2 as unknown as NamedRESTMessageV2Ctor;
+
+function createRestMessage(name: string, methodName: string): RESTMessageV2 {
+    return new NamedRESTMessageV2(name, methodName);
+}
 
 export function processLongRequest() {
-    const jobSysId = String(event.parm1 || "");
-    const target = String(event.parm2 || "");
+    // In a Script Action, current is the record passed to gs.eventQueue(...)
+    const job = current as GlideRecord;
 
-    const job = new GlideRecord("x_synops_async_job");
-
-    if (!job.get(jobSysId)) {
-        gs.error(`[AsyncJob] Job not found: ${jobSysId}`);
-        return;
-    }
+    const jobSysId = job.getUniqueValue();
+    const target = job.getValue("u_target") || "";
 
     try {
         job.setValue("u_state", "processing");
-        job.setValue("u_started_at", new GlideDateTime());
         job.update();
 
-        const payload = JSON.parse(String(job.u_payload || "{}"));
+        const payloadRaw = job.getValue("u_payload") || "{}";
+        const payload = JSON.parse(payloadRaw);
 
         if (target === "request_1") {
             callFirstLongRunningEndpoint(payload);
@@ -40,21 +38,24 @@ export function processLongRequest() {
         }
 
         job.setValue("u_state", "completed");
-        job.setValue("u_completed_at", new GlideDateTime());
         job.setValue("u_error", "");
         job.update();
     } catch (e: any) {
+        const attempts = parseInt(job.getValue("u_attempts") || "0", 10);
+
         job.setValue("u_state", "failed");
         job.setValue("u_error", e.message || String(e));
-        job.setValue("u_attempts", parseInt(String(job.u_attempts || "0"), 10) + 1);
+        job.setValue("u_attempts", String(attempts + 1));
         job.update();
 
         gs.error(`[AsyncJob][${jobSysId}] ${e.message || e}`);
     }
 }
 
-function callFirstLongRunningEndpoint(payload: any) {
-    const rm = new NamedRESTMessageV2("My REST Message", "NSC-SynOps Update API");
+function callFirstLongRunningEndpoint(payload: unknown) {
+    const rm = createRestMessage("SynOps External API", "first_request");
+
+    rm.setRequestHeader("Content-Type", "application/json");
     rm.setRequestBody(JSON.stringify(payload));
 
     const res = rm.execute();
@@ -65,8 +66,10 @@ function callFirstLongRunningEndpoint(payload: any) {
     }
 }
 
-function callSecondLongRunningEndpoint(payload: any) {
-    const rm = new NamedRESTMessageV2("My REST Message", "NSC-SynOps Update API");
+function callSecondLongRunningEndpoint(payload: unknown) {
+    const rm = createRestMessage("SynOps External API", "second_request");
+
+    rm.setRequestHeader("Content-Type", "application/json");
     rm.setRequestBody(JSON.stringify(payload));
 
     const res = rm.execute();
