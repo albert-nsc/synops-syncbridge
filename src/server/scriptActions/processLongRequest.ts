@@ -1,7 +1,17 @@
 // src/server/scriptActions/processLongRequest.ts
+import { GlideRecord, GlideDateTime, gs } from "@servicenow/glide";
+import { RESTMessageV2 } from "@servicenow/glide/sn_ws";
 
 declare const event: any;
 declare const current: any;
+
+type RESTMessageV2NamedConstructor = new (
+    name: string,
+    methodName: string
+) => RESTMessageV2;
+
+const NamedRESTMessageV2 =
+    RESTMessageV2 as unknown as RESTMessageV2NamedConstructor;
 
 export function processLongRequest() {
     const jobSysId = String(event.parm1 || "");
@@ -15,8 +25,8 @@ export function processLongRequest() {
     }
 
     try {
-        job.u_state = "processing";
-        job.u_started_at = new GlideDateTime();
+        job.setValue("u_state", "processing");
+        job.setValue("u_started_at", new GlideDateTime());
         job.update();
 
         const payload = JSON.parse(String(job.u_payload || "{}"));
@@ -29,14 +39,14 @@ export function processLongRequest() {
             throw new Error(`Unknown async target: ${target}`);
         }
 
-        job.u_state = "completed";
-        job.u_completed_at = new GlideDateTime();
-        job.u_error = "";
+        job.setValue("u_state", "completed");
+        job.setValue("u_completed_at", new GlideDateTime());
+        job.setValue("u_error", "");
         job.update();
     } catch (e: any) {
-        job.u_state = "failed";
-        job.u_error = e.message || String(e);
-        job.u_attempts = parseInt(String(job.u_attempts || "0"), 10) + 1;
+        job.setValue("u_state", "failed");
+        job.setValue("u_error", e.message || String(e));
+        job.setValue("u_attempts", parseInt(String(job.u_attempts || "0"), 10) + 1);
         job.update();
 
         gs.error(`[AsyncJob][${jobSysId}] ${e.message || e}`);
@@ -44,7 +54,7 @@ export function processLongRequest() {
 }
 
 function callFirstLongRunningEndpoint(payload: any) {
-    const rm = new sn_ws.RESTMessageV2("My REST Message", "first_request");
+    const rm = new NamedRESTMessageV2("My REST Message", "first_request");
     rm.setRequestBody(JSON.stringify(payload));
 
     const res = rm.execute();
@@ -56,7 +66,7 @@ function callFirstLongRunningEndpoint(payload: any) {
 }
 
 function callSecondLongRunningEndpoint(payload: any) {
-    const rm = new sn_ws.RESTMessageV2("My REST Message", "second_request");
+    const rm = new NamedRESTMessageV2("My REST Message", "second_request");
     rm.setRequestBody(JSON.stringify(payload));
 
     const res = rm.execute();
