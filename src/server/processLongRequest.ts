@@ -44,6 +44,9 @@ export function processLongRequest(current: ScriptActionCurrent, event: ScriptAc
         const payloadRaw = job.getValue("payload") || "{}";
         const payload = JSON.parse(payloadRaw);
 
+        job.setValue("started_at", new Date().toISOString());
+        job.update();
+
         if (target === "request_1") {
             callLongRunningEndpoint(payload, "First");
         } else if (target === "request_2") {
@@ -54,6 +57,7 @@ export function processLongRequest(current: ScriptActionCurrent, event: ScriptAc
 
         job.setValue("state", "completed");
         job.setValue("error", "");
+        job.setValue("completed_at", new Date().toISOString());
         job.update();
     } catch (e: any) {
         const attempts = parseInt(job.getValue("attempts") || "0", 10);
@@ -61,6 +65,7 @@ export function processLongRequest(current: ScriptActionCurrent, event: ScriptAc
         job.setValue("state", "failed");
         job.setValue("error", e.message || String(e));
         job.setValue("attempts", String(attempts + 1));
+        job.setValue("completed_at", new Date().toISOString());
         job.update();
 
         gs.error(`[AsyncJob][${jobSysId}] ${e.message || String(e)}`);
