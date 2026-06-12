@@ -13,7 +13,19 @@ function createRestMessage(name: string, methodName: string): RESTMessageV2 {
     return new NamedRESTMessageV2(name, methodName);
 }
 
-export function processLongRequestById(jobSysId: string) {
+type ScriptActionCurrent = {
+    getUniqueValue(): string;
+    getTableName?(): string;
+};
+
+type ScriptActionEvent = {
+    parm1?: string;
+    parm2?: string;
+    name?: string;
+};
+
+export function processLongRequest(current: ScriptActionCurrent, event: ScriptActionEvent) {
+    const jobSysId = current.getUniqueValue();
     gs.info(`[AsyncJob][${jobSysId}] processLongRequestById hit`);
 
     const job = new GlideRecord("x_nscgg_syncbridge_async_job");
