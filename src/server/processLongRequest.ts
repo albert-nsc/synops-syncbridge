@@ -1,7 +1,20 @@
-import { gs } from "@servicenow/glide";
+import { gs, GlideRecord } from "@servicenow/glide";
+
+declare const current: any;
 
 export const processLongRequest = () => {
-    gs.info("[AsyncJobTest] EXTERNAL MODULE HIT");
+    const job = current as GlideRecord;
+
+    const jobSysId = job.getUniqueValue();
+    const target = job.getValue("target") || "";
+
+    gs.info(`[AsyncJobTest] SCRIPT ACTION HIT. job=${jobSysId}, target=${target}`);
+
+    job.setValue("state", "processing");
+    job.setValue("error", "Script Action fired successfully");
+    job.update();
+
+    gs.info(`[AsyncJobTest] Updated job ${jobSysId} to processing`);
 };
 // import { GlideRecord, gs } from "@servicenow/glide";
 // import { RESTMessageV2 } from "@servicenow/glide/sn_ws";
