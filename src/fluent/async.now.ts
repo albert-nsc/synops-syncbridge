@@ -1,6 +1,6 @@
 // src/fluent/async.now.ts
 import { ScriptAction } from "@servicenow/sdk/core";
-import { processLongRequest } from "../server/scriptActions/processLongRequest";
+// import { processLongRequest } from "../server/scriptActions/processLongRequest";
 
 ScriptAction({
     $id: Now.ID["process-long-request-action"],
