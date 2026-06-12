@@ -35,6 +35,10 @@ declare global {
                         table: 'sys_module'
                         id: 'cc63cd6ed33148aebeb9dbf2fe54f2d6'
                     }
+                    src_server_processLongRequest_ts: {
+                        table: 'sys_module'
+                        id: '9544e6fe93204451ae2dd1ef6c073c8c'
+                    }
                     src_server_script_ts: {
                         table: 'sys_module'
                         id: '46294053c489473291b34e8008e22c2d'
@@ -43,6 +47,7 @@ declare global {
                     src_server_scriptActions_processLongRequest_ts: {
                         table: 'sys_module'
                         id: '9bd4bb28019543b68ccbafba240f832f'
+                        deleted: true
                     }
                     synops_api_v1: {
                         table: 'sys_ws_version'
