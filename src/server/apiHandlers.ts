@@ -320,7 +320,7 @@ export function createServiceRequest(request: any, response: any) {
                 "feCompletionDate": null,
                 "CauseCode": null,
                 "RepairCode": null,
-                "Comments": "",
+                "Comments": `Work order ${workOrderNumber} has been created.`,
                 "incidentStatus": "New",
                 "incidentClosedDTGMT": null,
                 "incidentStartDTGMT": null,
