@@ -246,22 +246,24 @@ export function createServiceRequest(request: any, response: any) {
 
         gs.info(`[SynOpsAPI][${requestId}] Created wm_order ${workOrderSysId}`);
 
+        const transactionId = getString(flat, "header.transactionId");
+
         const createPayload = {
             "Header": {
-                "transactionId": "1470169.1779353049121",
+                "transactionId": transactionId,
                 "userId": "SYSTEM_USER",
                 "sourceSystem": "NSC", //Mandatory
                 "timeStamp": new Date().toISOString()
             },
             "IncidentUpdate": {
                 "customerTicketId": "1470169",
-                "vendorTicketID": "1530345",
+                "vendorTicketID": workOrderNumber,
                 "vendorTicketStatus": "",
                 "activity": "CREATESRRESPONSE",
                 "responseDate": new Date().toISOString(),
-                "feConfirmEtaDate": "",
-                "feDispatchDate": "",
-                "feArrivalDate": "",
+                "feConfirmEtaDate": null,
+                "feDispatchDate": null,
+                "feArrivalDate": null,
                 "SuspendCode": null,
                 "SuspendDesc": null,
                 "feCompletionDate": null,
@@ -298,20 +300,20 @@ export function createServiceRequest(request: any, response: any) {
 
         const openPayload = {
             "Header": {
-                "transactionId": "1470169.1779353049121",
+                "transactionId": transactionId,
                 "userId": "SYSTEM_USER",
                 "sourceSystem": "NSC", //Mandatory
                 "timeStamp": new Date().toISOString()
             },
             "IncidentUpdate": {
                 "customerTicketId": "1470169",
-                "vendorTicketID": "1530345",
+                "vendorTicketID": workOrderNumber,
                 "vendorTicketStatus": "OPEN",
                 "activity": "OPENSRRESPONSE",
                 "responseDate": new Date().toISOString(),
-                "feConfirmEtaDate": "",
-                "feDispatchDate": "",
-                "feArrivalDate": "",
+                "feConfirmEtaDate": null,
+                "feDispatchDate": null,
+                "feArrivalDate": null,
                 "SuspendCode": null,
                 "SuspendDesc": null,
                 "feCompletionDate": null,
