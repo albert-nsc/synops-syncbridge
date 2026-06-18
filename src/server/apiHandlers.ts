@@ -247,6 +247,7 @@ export function createServiceRequest(request: any, response: any) {
         gs.info(`[SynOpsAPI][${requestId}] Created wm_order ${workOrderSysId}`);
 
         const transactionId = getString(flat, "header.transactionId");
+        const customerTicketId = getString(flat, "createServiceRequest.customerTicketId");
 
         const createPayload = {
             "Header": {
@@ -256,7 +257,7 @@ export function createServiceRequest(request: any, response: any) {
                 "timeStamp": new Date().toISOString()
             },
             "IncidentUpdate": {
-                "customerTicketId": "1470169",
+                "customerTicketId": customerTicketId,
                 "vendorTicketID": workOrderNumber,
                 "vendorTicketStatus": "",
                 "activity": "CREATESRRESPONSE",
@@ -306,7 +307,7 @@ export function createServiceRequest(request: any, response: any) {
                 "timeStamp": new Date().toISOString()
             },
             "IncidentUpdate": {
-                "customerTicketId": "1470169",
+                "customerTicketId": customerTicketId,
                 "vendorTicketID": workOrderNumber,
                 "vendorTicketStatus": "OPEN",
                 "activity": "OPENSRRESPONSE",
