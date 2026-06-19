@@ -460,7 +460,51 @@ export function cancelServiceRequest(request: any, response: any) {
     gs.info(`[SynOpsAPI][${requestId}] Received cancelServiceRequest with body: ${JSON.stringify(body)}`);
     gs.info(`[SynOpsAPI][${requestId}] Flattened body: ${JSON.stringify(flat)}`);
 
+    const workOrderNumber = getString(flat, "cancelServiceRequest.vendorTicketId");
+    const reason = body["cancelServiceRequest"]["remarks"][0]["text"];
+
     try {
+        const wo = new GlideRecord("wm_order");
+
+        wo.addQuery("number", workOrderNumber);
+        wo.setLimit(1);
+        wo.query();
+
+        if (!wo.next()) {
+            throw new Error(`Work order not found: ${workOrderNumber}`);
+        }
+
+        const currentState = wo.getDisplayValue("state");
+
+        if (
+            currentState === "Closed Complete" ||
+            currentState === "Closed Incomplete"
+        ) {
+            throw new Error(
+                `Work order ${workOrderNumber} cannot be canceled from ${currentState}`
+            );
+        }
+
+        // if (currentState === "Canceled") {
+        //     return wo.getUniqueValue();
+        // }
+
+        // ServiceNow requires a work note explaining the cancellation.
+        wo.setValue("work_notes", reason);
+
+        // Avoid hardcoding the numeric choice value.
+        wo.getElement("state").setDisplayValue("Canceled");
+
+        const updatedSysId = wo.update();
+
+        if (!updatedSysId) {
+            throw new Error(`Failed to cancel work order ${workOrderNumber}`);
+        }
+
+        gs.info(
+            `[SynOpsAPI][${requestId}] Canceled work order ${workOrderNumber}: ${reason}`
+        );
+
         setResponse(response, 200, {
             "timeStamp": new Date().toISOString(),
             "status": "Accepted",
