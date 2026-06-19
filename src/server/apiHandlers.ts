@@ -74,6 +74,54 @@ function createAsyncJob(requestId: string, target: string, payload: unknown): st
     return sysId;
 }
 
+/*
+Typical payload structure:
+{
+    "header.transactionId": "449c0bb0-e454-4c78-ac61-539add45cb3d",
+    "header.userId": "amruta.chaher",
+    "header.sourceSystem": "synops",
+    "header.timeStamp": "2026-06-19T13:06:54.420012600Z",
+    "createServiceRequest.customerTicketId": "383483",
+    "createServiceRequest.customerTicketRef": "Dispatch-70025",
+    "createServiceRequest.priority": null,
+    "createServiceRequest.summary": "01112510 | Dispatch-70025",
+    "createServiceRequest.description": "Deliver in Time",
+    "createServiceRequest.callerId": "amruta.chaher",
+    "createServiceRequest.site.contact.accountName": "Mike",
+    "createServiceRequest.site.contact.name": "Paulo",
+    "createServiceRequest.site.contact.emailAddress": "paulo.landgraf@sefaz.mt.gov.br.sb",
+    "createServiceRequest.site.contact.phoneNumber": "+55 65999983561",
+    "createServiceRequest.site.address.line1": "99 New York Ave NE",
+    "createServiceRequest.site.address.line2": "Building 6, Floor 3",
+    "createServiceRequest.site.address.city": "Arlington",
+    "createServiceRequest.site.address.country": "United States (US)",
+    "createServiceRequest.site.address.postalCode": "22203",
+    "createServiceRequest.site.address.state": "VA",
+    "createServiceRequest.site.address.countryCode": "US",
+    "createServiceRequest.serialNumber": "17SS6C320036",
+    "createServiceRequest.secondFERequired": false,
+    "createServiceRequest.partEta": null,
+    "createServiceRequest.partTrackingNumber": null,
+    "createServiceRequest.requestedAppointmentDateUtc": "2026-06-20T18:36:00Z",
+    "createServiceRequest.parts": [
+        {
+            "customerPartName": "CBL-SATA-0.5M",
+            "customerPartNumber": "CBL-SATA-0.5M",
+            "customerPartPosition": "A",
+            "customerPartSlot": "2",
+            "returnDefective": ""
+        }
+    ],
+    "createServiceRequest.remarks": [
+        {
+            "text": "Deliver in Time",
+            "type": "General",
+            "timestampUTC": "2026-06-19T13:06:54.451554019Z"
+        }
+    ]
+}
+*/
+
 export function createServiceRequest(request: any, response: any) {
     const requestId = gs.generateGUID();
     const body = request.body?.data ?? {};
@@ -493,7 +541,7 @@ export function cancelServiceRequest(request: any, response: any) {
         wo.setValue("work_notes", reason);
 
         // Avoid hardcoding the numeric choice value.
-        wo.getElement("state").setDisplayValue("Canceled");
+        wo.getElement("state").setDisplayValue("Cancelled");
 
         const updatedSysId = wo.update();
 
@@ -502,7 +550,7 @@ export function cancelServiceRequest(request: any, response: any) {
         }
 
         gs.info(
-            `[SynOpsAPI][${requestId}] Canceled work order ${workOrderNumber}: ${reason}`
+            `[SynOpsAPI][${requestId}] Cancelled work order ${workOrderNumber}: ${reason}`
         );
 
         setResponse(response, 200, {
