@@ -575,3 +575,8 @@ export function cancelServiceRequest(request: any, response: any) {
         return;
     }
 }
+
+/*
+Prompt:
+I need to implement an integration in ServiceNow using the ServiceNow SDK. My integration has the possibility of assigning two field engineers to a work order. When both are assigned I need to generate a timestamp and call an event that is connected to a ScriptAction that sends out a REST call to the other party in the integration. How should I implement the assignment trigger and the possible two field engineers in my integration?
+*/
