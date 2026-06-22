@@ -9,6 +9,10 @@ declare global {
                         table: 'sys_module'
                         id: 'b16f6baa243d40d1a6ba0affe0c72f37'
                     }
+                    'br-wot-engineer-assignment': {
+                        table: 'sys_script'
+                        id: '905d911cacf54e30b609c7b469aab075'
+                    }
                     br0: {
                         table: 'sys_script'
                         id: 'bb242ea1d87e458a8b1000838a04b2b2'
@@ -48,6 +52,10 @@ declare global {
                         table: 'sys_module'
                         id: '9bd4bb28019543b68ccbafba240f832f'
                         deleted: true
+                    }
+                    src_server_workOrderAssignment_ts: {
+                        table: 'sys_module'
+                        id: '2b7211d77d5741639c43617912409392'
                     }
                     synops_api_v1: {
                         table: 'sys_ws_version'
@@ -125,10 +133,27 @@ declare global {
                     },
                     {
                         table: 'sys_dictionary'
+                        id: '19ab2a039e6e405eb47d180b9d8b4a95'
+                        key: {
+                            name: 'wm_order'
+                            element: 'u_primary_field_engineer'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
                         id: '277d4c14171b40d698325841624189ca'
                         key: {
                             name: 'x_nscgg_syncbridge_async_job'
                             element: 'target'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: '28349446a54744b0963ddcd231f24765'
+                        key: {
+                            name: 'wm_order'
+                            element: 'u_primary_field_engineer'
+                            language: 'en'
                         }
                     },
                     {
@@ -169,6 +194,24 @@ declare global {
                     },
                     {
                         table: 'sys_documentation'
+                        id: '5f75b8a1ca6d40e08a071b92cfaa7945'
+                        key: {
+                            name: 'wm_order'
+                            element: 'NULL'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: '608ee449a50f48949704b7e4797a6429'
+                        key: {
+                            name: 'wm_order'
+                            element: 'u_secondary_field_engineer'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
                         id: '64b611836b884280834d8d6e9563dc75'
                         key: {
                             name: 'x_nscgg_syncbridge_async_job'
@@ -187,10 +230,25 @@ declare global {
                     },
                     {
                         table: 'sys_dictionary'
+                        id: '7bee71bd52b64f81aef6fe8f806dc82b'
+                        key: {
+                            name: 'wm_order'
+                            element: 'u_engineers_assignment_sent'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
                         id: '7d3f1c2e588a4f3bbbd01fd697d66ca3'
                         key: {
                             name: 'x_nscgg_syncbridge_async_job'
                             element: 'NULL'
+                        }
+                    },
+                    {
+                        table: 'ua_table_licensing_config'
+                        id: '7f129ab4fcb24829b9c41651a179248c'
+                        key: {
+                            name: 'wm_order'
                         }
                     },
                     {
@@ -199,6 +257,15 @@ declare global {
                         key: {
                             name: 'x_nscgg_syncbridge_async_job'
                             element: 'started_at'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: '8f321ca5f60249dd9c3b190ac9a27080'
+                        key: {
+                            name: 'wm_order'
+                            element: 'u_required_engineer_count'
                             language: 'en'
                         }
                     },
@@ -245,12 +312,27 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_dictionary'
+                        id: 'a403a827b255492eaad37148e133bdb0'
+                        key: {
+                            name: 'wm_order'
+                            element: 'NULL'
+                        }
+                    },
+                    {
                         table: 'sys_documentation'
                         id: 'af7c93631e0e41b587cad64b053e2c24'
                         key: {
                             name: 'x_nscgg_syncbridge_async_job'
                             element: 'target'
                             language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_db_object'
+                        id: 'b6643f672c4a40e19060105ba9b8c463'
+                        key: {
+                            name: 'wm_order'
                         }
                     },
                     {
@@ -268,10 +350,44 @@ declare global {
                     },
                     {
                         table: 'sys_dictionary'
+                        id: 'be895245869341d8a81b1bbb9e2bdf9c'
+                        key: {
+                            name: 'wm_order'
+                            element: 'u_secondary_field_engineer'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: 'bec09975300c494db63270acfed2ffa3'
+                        key: {
+                            name: 'wm_order'
+                            element: 'u_engineers_assigned_at'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: 'c0aa67d91b0a49c3b10413cadcb2b007'
+                        key: {
+                            name: 'wm_order'
+                            element: 'u_required_engineer_count'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
                         id: 'c18a9306ee91457ba1b8e2d43c20e2dd'
                         key: {
                             name: 'x_nscgg_syncbridge_async_job'
                             element: 'attempts'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: 'c3cbf7d06b2d403198e562d222ab22f5'
+                        key: {
+                            name: 'wm_order'
+                            element: 'u_engineers_assignment_sent'
+                            language: 'en'
                         }
                     },
                     {
@@ -288,6 +404,14 @@ declare global {
                         key: {
                             name: 'x_nscgg_syncbridge_async_job'
                             element: 'started_at'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: 'dbd86f917cfc4399a44f401239d4a2cf'
+                        key: {
+                            name: 'wm_order'
+                            element: 'u_engineers_assigned_at'
                         }
                     },
                     {

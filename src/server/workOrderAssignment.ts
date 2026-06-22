@@ -1,4 +1,3 @@
-// src/server/businessRules/onWorkOrderTaskAssigned.ts
 import { GlideRecord, gs } from "@servicenow/glide";
 
 const EVENT_NAME = "x_nscgg_syncbridge.wo.eng_assigned";
