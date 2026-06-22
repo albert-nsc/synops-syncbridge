@@ -307,7 +307,7 @@ export function createServiceRequest(request: any, response: any) {
             "IncidentUpdate": {
                 "customerTicketId": customerTicketId,
                 "vendorTicketID": workOrderNumber,
-                "vendorTicketStatus": "",
+                "vendorTicketStatus": "OPEN",
                 "activity": "CREATESRRESPONSE",
                 "responseDate": new Date().toISOString(),
                 "feConfirmEtaDate": null,
