@@ -91,6 +91,34 @@ function setFirstValidField(gr: any, candidates: string[], value: string) {
     );
 }
 
+function createCrewRequirement(taskSysId: string, crewSize: number): string {
+    const req = new GlideRecord("wm_crew_requirement");
+    req.initialize();
+
+    // The reference back to wm_task can vary by version/customization.
+    setFirstValidField(req, ["task", "work_order_task", "wm_task"], taskSysId);
+
+    setFirstValidField(
+        req,
+        ["minimum_crew_size", "min_crew_size", "minimum_size"],
+        String(crewSize)
+    );
+
+    setFirstValidField(
+        req,
+        ["recommended_crew_size", "recommended_size"],
+        String(crewSize)
+    );
+
+    const reqSysId = req.insert();
+
+    if (!reqSysId) {
+        throw new Error("Failed to create wm_crew_requirement");
+    }
+
+    return String(reqSysId);
+}
+
 /*
 Typical payload structure:
 {
@@ -328,6 +356,10 @@ export function createServiceRequest(request: any, response: any) {
 
         if (!taskSysId) {
             throw new Error("Failed to create wm_task");
+        }
+
+        if (secondFERequired) {
+            const crewRequirementSysId = createCrewRequirement(String(taskSysId), 2);
         }
 
         const transactionId = getString(flat, "header.transactionId");
