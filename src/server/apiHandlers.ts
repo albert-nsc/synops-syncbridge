@@ -119,6 +119,23 @@ function createCrewRequirement(taskSysId: string, crewSize: number): string {
     return String(reqSysId);
 }
 
+function logWorkOrderState(label: string, workOrderSysId: string) {
+    const wo = new GlideRecord("wm_order");
+
+    if (!wo.get(workOrderSysId)) {
+        gs.error(`[SynOpsAPI][${label}] WO not found: ${workOrderSysId}`);
+        return;
+    }
+
+    gs.info(
+        `[SynOpsAPI][${label}] WO=${wo.getValue("number")} ` +
+        `state_raw=[${wo.getValue("state")}] ` +
+        `state_display=[${wo.getDisplayValue("state")}] ` +
+        `active=[${wo.getValue("active")}] ` +
+        `updated_by=[${wo.getValue("sys_updated_by")}]`
+    );
+}
+
 /*
 Typical payload structure:
 {
@@ -356,7 +373,11 @@ export function createServiceRequest(request: any, response: any) {
             setFirstValidField(task, ["needs_crew", "requires_crew"], "true");
         }
 
+        logWorkOrderState("before-task-insert", workOrderSysId);
+
         const taskSysId = task.insert();
+
+        logWorkOrderState("after-task-insert", workOrderSysId);
 
         if (!taskSysId) {
             throw new Error("Failed to create wm_task");
