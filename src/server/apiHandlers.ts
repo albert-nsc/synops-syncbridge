@@ -292,7 +292,7 @@ export function createServiceRequest(request: any, response: any) {
 
         const workOrderNumber = wo.getValue("number");
 
-        gs.info(`[SynOpsAPI][${requestId}] Created wm_order ${workOrderSysId}`);
+        gs.info(`[SynOpsAPI][${requestId}] Created wm_order ${workOrderSysId} [${workOrderNumber}]`);
 
         const transactionId = getString(flat, "header.transactionId");
         const customerTicketId = getString(flat, "createServiceRequest.customerTicketId");
@@ -551,6 +551,71 @@ export function cancelServiceRequest(request: any, response: any) {
 
         gs.info(
             `[SynOpsAPI][${requestId}] Cancelled work order ${workOrderNumber}: ${reason}`
+        );
+
+        const transactionId = getString(flat, "header.transactionId");
+        const customerTicketId = getString(flat, "cancelServiceRequest.customerTicketId");
+
+        const cancelPayload = {
+            "Header": {
+                "transactionId": transactionId,
+                "userId": "SYSTEM_USER",
+                "sourceSystem": "NSC", //Mandatory
+                "timeStamp": new Date().toISOString()
+            },
+            "IncidentUpdate": {
+                "customerTicketId": customerTicketId,
+                "vendorTicketID": workOrderNumber,
+                "vendorTicketStatus": "CANCELLED",
+                "activity": "CANCELSRRESPONSE",
+                "responseDate": new Date().toISOString(),
+                "feConfirmEtaDate": null,
+                "feDispatchDate": null,
+                "feArrivalDate": null,
+                "SuspendCode": null,
+                "SuspendDesc": null,
+                "feCompletionDate": null,
+                "CauseCode": null,
+                "RepairCode": null,
+                "Comments": "The service request has been cancelled.",
+                "incidentStatus": "Cancelled",
+                "incidentClosedDTGMT": null,
+                "incidentStartDTGMT": null,
+                "incidentPriority": null,
+                "incidentResolutionCode": null,
+                "incidentResolutionDesc": null,
+                "OperationalCategorizationTier1": null,
+                "IncidentCauseCode": null,
+                "IncidentCauseType": null,
+                "firstFeName": "",
+                "firstFePhone": "",
+                "firstFeEmail": "",
+                //Second FE details required if second fe required is true
+                "secondFeName": "",
+                "secondFePhone": "",
+                "secondFeEmail": "",
+                "TrackingNumber": null,
+                "IsPartReturned": null,
+                "PartNotReturnedReason": null,
+                "Fault": {
+                    "FaultCode": "",
+                    "FaultDescription": ""
+                }
+            }
+        }
+
+        const job1SysId = createAsyncJob(requestId, "request_1", cancelPayload);
+
+        const job1 = new GlideRecord("x_nscgg_syncbridge_async_job");
+        if (!job1.get(job1SysId)) {
+            throw new Error(`Async job not found: ${job1SysId}`);
+        }
+
+        gs.eventQueue(
+            "x_nscgg_syncbridge.long_request.process",
+            job1,
+            job1SysId,
+            "request_1"
         );
 
         setResponse(response, 200, {
