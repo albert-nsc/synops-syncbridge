@@ -284,28 +284,30 @@ export function createServiceRequest(request: any, response: any) {
         wo.initialize();
 
         const summary = `Nutanix / ${flat["createServiceRequest.summary"]}`;
+        const finalShortDescription = summary || `Field engineer visit - ${customerName}`;
         wo.setValue(
             "short_description",
-            summary || `Field engineer visit - ${customerName}`
+            finalShortDescription
         );
 
         const externalReference = flat["createServiceRequest.customerTicketId"];
         const description = flat["createServiceRequest.description"];
         const secondFERequired = flat["createServiceRequest.secondFERequired"] || false;
         const requestedAppointmentDateUtc = getString(flat, "createServiceRequest.requestedAppointmentDateUtc");
+        const finalDescription = [
+            description || "Field engineer visit requested via API",
+            "",
+            `Customer: ${customerName}`,
+            `Phone: ${customerPhone || ""}`,
+            `Email: ${customerEmail || ""}`,
+            `Site address: ${siteAddress}`,
+            `External reference: ${externalReference || ""}`,
+            `Requires second field engineer: ${secondFERequired}`,
+            `Requested appointment date (UTC): ${requestedAppointmentDateUtc || ""}`
+        ].join("\n");
         wo.setValue(
             "description",
-            [
-                description || "Field engineer visit requested via API",
-                "",
-                `Customer: ${customerName}`,
-                `Phone: ${customerPhone || ""}`,
-                `Email: ${customerEmail || ""}`,
-                `Site address: ${siteAddress}`,
-                `External reference: ${externalReference || ""}`,
-                `Requires second field engineer: ${secondFERequired}`,
-                `Requested appointment date (UTC): ${requestedAppointmentDateUtc || ""}`
-            ].join("\n")
+            finalDescription
         );
 
         wo.setValue("priority", "3");
@@ -347,6 +349,8 @@ export function createServiceRequest(request: any, response: any) {
         task.initialize();
 
         task.setValue("parent", workOrderSysId);
+        task.setValue("short_description", finalShortDescription);
+        task.setValue("description", finalDescription);
 
         if (secondFERequired) {
             setFirstValidField(task, ["needs_crew", "requires_crew"], "true");
