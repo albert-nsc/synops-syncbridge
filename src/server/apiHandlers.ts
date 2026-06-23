@@ -246,6 +246,7 @@ export function createServiceRequest(request: any, response: any) {
 
         const externalReference = flat["createServiceRequest.customerTicketId"];
         const description = flat["createServiceRequest.description"];
+        const requestedAppointmentDateUtc = getString(flat, "createServiceRequest.requestedAppointmentDateUtc");
         wo.setValue(
             "description",
             [
@@ -256,6 +257,8 @@ export function createServiceRequest(request: any, response: any) {
                 `Email: ${customerEmail || ""}`,
                 `Site address: ${siteAddress}`,
                 `External reference: ${externalReference || ""}`,
+                `Requires second field engineer: ${flat["createServiceRequest.secondFERequired"] || false}`,
+                `Requested appointment date (UTC): ${requestedAppointmentDateUtc || ""}`
             ].join("\n")
         );
 
