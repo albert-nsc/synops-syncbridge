@@ -74,6 +74,23 @@ function createAsyncJob(requestId: string, target: string, payload: unknown): st
     return sysId;
 }
 
+/**
+ * Safer helper because exact field names can differ slightly
+ * across FSM/Crew plugin versions.
+ */
+function setFirstValidField(gr: any, candidates: string[], value: string) {
+    for (const field of candidates) {
+        if (gr.isValidField(field)) {
+            gr.setValue(field, value);
+            return field;
+        }
+    }
+
+    throw new Error(
+        `None of these fields exist on ${gr.getTableName()}: ${candidates.join(", ")}`
+    );
+}
+
 /*
 Typical payload structure:
 {
@@ -246,6 +263,7 @@ export function createServiceRequest(request: any, response: any) {
 
         const externalReference = flat["createServiceRequest.customerTicketId"];
         const description = flat["createServiceRequest.description"];
+        const secondFERequired = flat["createServiceRequest.secondFERequired"] || false;
         const requestedAppointmentDateUtc = getString(flat, "createServiceRequest.requestedAppointmentDateUtc");
         wo.setValue(
             "description",
@@ -257,7 +275,7 @@ export function createServiceRequest(request: any, response: any) {
                 `Email: ${customerEmail || ""}`,
                 `Site address: ${siteAddress}`,
                 `External reference: ${externalReference || ""}`,
-                `Requires second field engineer: ${flat["createServiceRequest.secondFERequired"] || false}`,
+                `Requires second field engineer: ${secondFERequired}`,
                 `Requested appointment date (UTC): ${requestedAppointmentDateUtc || ""}`
             ].join("\n")
         );
@@ -296,6 +314,21 @@ export function createServiceRequest(request: any, response: any) {
         const workOrderNumber = wo.getValue("number");
 
         gs.info(`[SynOpsAPI][${requestId}] Created wm_order ${workOrderSysId} [${workOrderNumber}]`);
+
+        const task = new GlideRecord("wm_task");
+        task.initialize();
+
+        task.setValue("parent", workOrderSysId);
+
+        if (secondFERequired) {
+            setFirstValidField(task, ["needs_crew", "requires_crew"], "true");
+        }
+
+        const taskSysId = task.insert();
+
+        if (!taskSysId) {
+            throw new Error("Failed to create wm_task");
+        }
 
         const transactionId = getString(flat, "header.transactionId");
         const customerTicketId = getString(flat, "createServiceRequest.customerTicketId");
