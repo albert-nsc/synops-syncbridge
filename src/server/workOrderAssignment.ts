@@ -1,6 +1,5 @@
 import { GlideRecord, gs } from "@servicenow/glide";
 
-const EVENT_NAME = "x_nscgg_syncbridge.wo.eng_assigned";
 const WORK_ORDER_TABLE = "wm_order";
 const WORK_ORDER_TASK_TABLE = "wm_task";
 const PARENT_FIELD = "parent"; // Work Order Task -> Work Order
