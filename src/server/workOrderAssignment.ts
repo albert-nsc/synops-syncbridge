@@ -89,9 +89,5 @@ export function onWorkOrderTaskAssigned(current: any, previous: any) {
     wo.setValue("u_engineers_assignment_sent", true);
     wo.update();
 
-    gs.eventQueue(EVENT_NAME, wo, assignedAt, engineerIds.join(","));
-
-    gs.info(
-        `[SynOps] Queued ${EVENT_NAME} for work order ${wo.getValue("number")} with engineers ${engineerIds.join(",")}`
-    );
+    // TODO: Trigger the event to notify the external system about the assignment
 }
